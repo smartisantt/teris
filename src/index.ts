@@ -2,17 +2,9 @@ import { Square } from './core/Square';
 import { SquarePageViewer } from './core/viewer/SquarePageViewer';
 import $ from 'jquery';
 import { SquareGroup } from './core/SquareGroup';
+import { createTeris, LShape, SquareShape } from './core/Teris';
 
-const group = new SquareGroup(
-  [
-    { x: 0, y: -1 },
-    { x: -1, y: 0 },
-    { x: 0, y: 1 },
-    { x: 0, y: 0 },
-  ],
-  { x: 5, y: 5 },
-  'red'
-);
+const group = createTeris({ x: 2, y: 4 });
 
 group.squares.forEach((sq) => {
   sq.viewer = new SquarePageViewer(sq, $('#root'));
@@ -35,13 +27,13 @@ $('.up').on('click', () => {
 $('.left').on('click', () => {
   group.centerPoint = {
     x: group.centerPoint.x - 1,
-    y: group.centerPoint.y ,
+    y: group.centerPoint.y,
   };
 });
 
 $('.right').on('click', () => {
   group.centerPoint = {
     x: group.centerPoint.x + 1,
-    y: group.centerPoint.y ,
+    y: group.centerPoint.y,
   };
 });
