@@ -1,31 +1,47 @@
 import { Square } from './core/Square';
 import { SquarePageViewer } from './core/viewer/SquarePageViewer';
 import $ from 'jquery';
+import { SquareGroup } from './core/SquareGroup';
 
-const sq = new Square();
+const group = new SquareGroup(
+  [
+    { x: 0, y: -1 },
+    { x: -1, y: 0 },
+    { x: 0, y: 1 },
+    { x: 0, y: 0 },
+  ],
+  { x: 5, y: 5 },
+  'red'
+);
 
-sq.viewer = new SquarePageViewer(sq, $('#root'));
-
-sq.color = 'green';
-sq.point = { x: 1, y: 1 };
-
-// setInterval(() => {
-//   sq.point = {
-//     x: sq.point.x,
-//     y: sq.point.y + 1,
-//   };
-// }, 1000);
+group.squares.forEach((sq) => {
+  sq.viewer = new SquarePageViewer(sq, $('#root'));
+});
 
 $('.down').on('click', () => {
-  sq.point = {
-    x: sq.point.x,
-    y: sq.point.y + 1,
+  group.centerPoint = {
+    x: group.centerPoint.x,
+    y: group.centerPoint.y + 1,
   };
 });
 
-$('.remove').on("click", ()=>{
-  sq.viewer?.remove()
-})
-$('.add').on("click", ()=>{
-  sq.viewer = new SquarePageViewer(sq, $('#root'))
-})
+$('.up').on('click', () => {
+  group.centerPoint = {
+    x: group.centerPoint.x,
+    y: group.centerPoint.y - 1,
+  };
+});
+
+$('.left').on('click', () => {
+  group.centerPoint = {
+    x: group.centerPoint.x - 1,
+    y: group.centerPoint.y ,
+  };
+});
+
+$('.right').on('click', () => {
+  group.centerPoint = {
+    x: group.centerPoint.x + 1,
+    y: group.centerPoint.y ,
+  };
+});

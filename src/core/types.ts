@@ -7,3 +7,5 @@ export interface IViewer {
   show(): void;
   remove(): void;
 }
+
+export type Shape = Point[];
