@@ -23,3 +23,7 @@ $('.left').on('click', () => {
 $('.right').on('click', () => {
   TerisRules.move(teris, Direction.right);
 });
+
+$('.rotate').on('click', () => {
+  TerisRules.rotate(teris)
+});

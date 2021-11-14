@@ -31,7 +31,6 @@ export class TerisRules {
   static move(teris: SquareGroup, targetOrDirection: Point): boolean;
   static move(teris: SquareGroup, targetOrDirection: Direction): boolean;
   static move(teris: SquareGroup, targetOrDirection: Point | Direction): boolean {
-      console.log('lll')
     if (isPoint(targetOrDirection)) {
       if (TerisRules.canIMove(teris.shape, targetOrDirection)) {
         teris.centerPoint = targetOrDirection;
@@ -41,7 +40,7 @@ export class TerisRules {
     } else {
       const direction = targetOrDirection;
       let targetPoint;
-      console.log('down')
+      console.log('down');
       switch (direction) {
         case Direction.down:
           console.log('down');
@@ -72,5 +71,14 @@ export class TerisRules {
 
       return this.move(teris, targetPoint);
     }
+  }
+
+  static rotate(teris: SquareGroup): boolean {
+    const newShape = teris.afterRotateShape();
+    if(this.canIMove(newShape, teris.centerPoint)){
+      teris.rotate()
+      return true
+    }
+    return false
   }
 }
