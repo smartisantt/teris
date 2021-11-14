@@ -23,6 +23,10 @@ export class SquareGroup {
     });
   }
 
+  public get shape(){
+    return this._shape
+  }
+
   constructor(private _shape: Shape, private _centerPoint: Point, private _color: string) {
     this._squares = [];
     const arr: Square[] = [];

@@ -3,37 +3,23 @@ import { SquarePageViewer } from './core/viewer/SquarePageViewer';
 import $ from 'jquery';
 import { SquareGroup } from './core/SquareGroup';
 import { createTeris, LShape, SquareShape } from './core/Teris';
+import { TerisRules } from './core/TerisRules';
+import { Direction } from './core/types';
 
-const group = createTeris({ x: 2, y: 4 });
+const teris = createTeris({ x: 2, y: 4 });
 
-group.squares.forEach((sq) => {
+teris.squares.forEach((sq) => {
   sq.viewer = new SquarePageViewer(sq, $('#root'));
 });
 
 $('.down').on('click', () => {
-  group.centerPoint = {
-    x: group.centerPoint.x,
-    y: group.centerPoint.y + 1,
-  };
-});
-
-$('.up').on('click', () => {
-  group.centerPoint = {
-    x: group.centerPoint.x,
-    y: group.centerPoint.y - 1,
-  };
+  TerisRules.move(teris, Direction.down);
 });
 
 $('.left').on('click', () => {
-  group.centerPoint = {
-    x: group.centerPoint.x - 1,
-    y: group.centerPoint.y,
-  };
+  TerisRules.move(teris, Direction.left);
 });
 
 $('.right').on('click', () => {
-  group.centerPoint = {
-    x: group.centerPoint.x + 1,
-    y: group.centerPoint.y,
-  };
+  TerisRules.move(teris, Direction.right);
 });
