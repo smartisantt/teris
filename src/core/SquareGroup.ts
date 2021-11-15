@@ -3,6 +3,20 @@ import { Point, Shape } from './types';
 
 export class SquareGroup {
   private _squares: readonly Square[] = [];
+  protected isClock = true;
+
+  constructor(private _shape: Shape, private _centerPoint: Point, private _color: string) {
+    this._squares = [];
+    const arr: Square[] = [];
+    this._shape.forEach((p) => {
+      const sq = new Square();
+      sq.color = this._color;
+      arr.push(sq);
+    });
+
+    this._squares = arr;
+    this.setSquarePoints();
+  }
 
   public get squares() {
     return this._squares;
@@ -29,21 +43,6 @@ export class SquareGroup {
   public get shape() {
     return this._shape;
   }
-
-  constructor(private _shape: Shape, private _centerPoint: Point, private _color: string) {
-    this._squares = [];
-    const arr: Square[] = [];
-    this._shape.forEach((p) => {
-      const sq = new Square();
-      sq.color = this._color;
-      arr.push(sq);
-    });
-
-    this._squares = arr;
-    this.setSquarePoints();
-  }
-
-  protected isClock = true;
 
   afterRotateShape(): Shape {
     if (this.isClock) {
