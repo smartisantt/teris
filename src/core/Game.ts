@@ -13,6 +13,7 @@ export class Game {
   private _nextTeris: SquareGroup = createTeris({ x: 0, y: 0 });
   private _timer?: number;
   private _duration: number = 1000;
+  private _exists: Square[] = [];
 
   constructor(private _viewer: GameViewer) {
     this.resetCenterPoint(GameConfig.nextSize.width, this._nextTeris);
@@ -38,6 +39,31 @@ export class Game {
     }
   }
 
+  control_left() {
+    if (this._curTeris && this._gameStatus === GameStatus.playing) {
+      TerisRules.move(this._curTeris, Direction.left, this._exists);
+    }
+  }
+
+  control_right() {
+    if (this._curTeris && this._gameStatus === GameStatus.playing) {
+      TerisRules.move(this._curTeris, Direction.right, this._exists);
+    }
+  }
+
+  control_down() {
+    if (this._curTeris && this._gameStatus === GameStatus.playing) {
+      TerisRules.moveDirectly(this._curTeris, Direction.down, this._exists);
+      this.hitBottom();
+    }
+  }
+
+  control_rotate() {
+    if (this._curTeris && this._gameStatus === GameStatus.playing) {
+      TerisRules.rotate(this._curTeris, this._exists);
+    }
+  }
+
   private switchTeris() {
     this._curTeris = this._nextTeris;
     this.resetCenterPoint(GameConfig.panelSize.width, this._curTeris);
@@ -56,7 +82,9 @@ export class Game {
     }
     this._timer = setInterval(() => {
       if (this._curTeris) {
-        TerisRules.move(this._curTeris, Direction.down);
+        if (!TerisRules.move(this._curTeris, Direction.down, this._exists)) {
+          this.hitBottom();
+        }
       }
     }, this._duration);
   }
@@ -74,5 +102,13 @@ export class Game {
           })
       );
     }
+  }
+
+  /**
+   * 触底之后的操作
+   */
+  private hitBottom() {
+    this._exists.push(...this._curTeris!.squares);
+    this.switchTeris();
   }
 }
