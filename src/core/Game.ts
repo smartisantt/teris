@@ -109,6 +109,8 @@ export class Game {
    */
   private hitBottom() {
     this._exists.push(...this._curTeris!.squares);
+    const num =  TerisRules.deleteSquares(this._exists)
+    console.log(num)
     this.switchTeris();
   }
 }

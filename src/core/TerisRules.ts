@@ -47,10 +47,8 @@ export class TerisRules {
     } else {
       const direction = targetOrDirection;
       let targetPoint;
-      console.log('down');
       switch (direction) {
         case Direction.down:
-          console.log('down');
           targetPoint = {
             x: teris.centerPoint.x,
             y: teris.centerPoint.y + 1,
@@ -88,6 +86,52 @@ export class TerisRules {
     const newShape = teris.afterRotateShape();
     if (this.canIMove(newShape, teris.centerPoint, exists)) {
       teris.rotate();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 当前y坐标的方块
+   * @param exists
+   * @param y
+   */
+  private static getLineSquares(exists: Square[], y: number) {
+    return exists.filter((sq) => sq.point.y === y);
+  }
+
+  static deleteSquares(exists: Square[]): number {
+    const ys = exists.map((sq) => sq.point.y);
+    const maxY = Math.max(...ys);
+    const minY = Math.min(...ys);
+    let num = 0;
+    for (let y = minY; y <= maxY; y++) {
+      if (this.deleteLine(exists, y)) {
+        num++;
+      }
+    }
+    return num;
+  }
+
+  private static deleteLine(exists: Square[], y: number): boolean {
+    const squares = this.getLineSquares(exists, y);
+
+    if (squares.length === GameConfig.panelSize.width) {
+      squares.forEach((sq) => {
+        sq.viewer?.remove();
+        exists
+          .filter((sq) => sq.point.y < y)
+          .forEach(
+            (sq) =>
+              (sq.point = {
+                x: sq.point.x,
+                y: sq.point.y + 1,
+              })
+          );
+        const index = exists.indexOf(sq);
+        exists.splice(index, 1);
+      });
+
       return true;
     }
     return false;
