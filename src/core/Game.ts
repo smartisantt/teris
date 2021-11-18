@@ -14,15 +14,34 @@ export class Game {
   private _timer?: number;
   private _duration: number = 1000;
   private _exists: Square[] = [];
+  private _score: number = 0;
 
   constructor(private _viewer: GameViewer) {
+    this.createNext();
+  }
+
+  private createNext() {
+    this._nextTeris = createTeris({ x: 0, y: 0 });
     this.resetCenterPoint(GameConfig.nextSize.width, this._nextTeris);
     this._viewer.showNext(this._nextTeris);
+  }
+
+  private init() {
+    this._exists.forEach((sq) => {
+      sq.viewer?.remove();
+    });
+    this._exists = [];
+
+    this.createNext();
+    this._curTeris = undefined;
   }
 
   start() {
     if (this._gameStatus === GameStatus.playing) {
       return;
+    }
+    if (this._gameStatus === GameStatus.over) {
+      this.init();
     }
     this._gameStatus = GameStatus.playing;
     if (!this._curTeris) {
@@ -66,11 +85,19 @@ export class Game {
 
   private switchTeris() {
     this._curTeris = this._nextTeris;
+    this._curTeris.squares.forEach((sq) => {
+      sq.viewer?.remove();
+    });
     this.resetCenterPoint(GameConfig.panelSize.width, this._curTeris);
-    this._nextTeris = createTeris({ x: 0, y: 0 });
-    this.resetCenterPoint(GameConfig.nextSize.width, this._nextTeris);
+
+    if (!TerisRules.canIMove(this._curTeris.shape, this._curTeris.centerPoint, this._exists)) {
+      this._gameStatus = GameStatus.over;
+      clearInterval(this._timer);
+      this._timer = undefined;
+      return;
+    }
+    this.createNext();
     this._viewer.switch(this._curTeris);
-    this._viewer.showNext(this._nextTeris);
   }
 
   /**
@@ -94,13 +121,10 @@ export class Game {
     const y = 0;
     teris.centerPoint = { x, y };
     while (teris.squares.some((it) => it.point.y < 0)) {
-      teris.squares.forEach(
-        (sq) =>
-          (sq.point = {
-            x: sq.point.x,
-            y: sq.point.y + 1,
-          })
-      );
+      teris.centerPoint = {
+        x: teris.centerPoint.x,
+        y: teris.centerPoint.y + 1,
+      };
     }
   }
 
@@ -109,8 +133,29 @@ export class Game {
    */
   private hitBottom() {
     this._exists.push(...this._curTeris!.squares);
-    const num =  TerisRules.deleteSquares(this._exists)
-    console.log(num)
+    const num = TerisRules.deleteSquares(this._exists);
+    this.addScore(num);
     this.switchTeris();
+  }
+
+  private addScore(lineNumber: number) {
+    switch (lineNumber) {
+      case 1:
+        this._score += 1;
+        break;
+      case 2:
+        this._score += 3;
+        break;
+      case 3:
+        this._score += 5;
+        break;
+      case 4:
+        this._score += 10;
+        break;
+
+      default:
+        break;
+    }
+    console.log(this._score)
   }
 }
