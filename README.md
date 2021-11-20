@@ -1,4 +1,4 @@
-# TpyeScript 实现俄罗斯方块小游戏
+# TypeScript 实现俄罗斯方块小游戏
 
 设计思路：单一原则、开闭原则。
 
@@ -6,6 +6,7 @@
 
 ![](assets/img/demo.png)
 
+文件目录如下：
 ```
 ./src
 ├── core
@@ -15,7 +16,7 @@
 │   ├── SquareGroup.ts      // 方块组合 
 │   ├── Teris.ts            // 继承方块组合
 │   ├── TerisRules.ts       // 移动规则
-│   ├── types.ts    
+│   ├── types.ts            // 定义的接口、枚举类型等
 │   ├── utils.ts
 │   └── viewer              // 显示相关
 │       ├── GamePageViewer.ts
