@@ -37,13 +37,13 @@ export class Game {
     this._score = val;
     this._viewer.showScore(val);
     const level = GameConfig.levels.filter(it=>it.score <= val ).pop()!
-    console.log(level)
+ 
     if(level.duration === this._duration){
       return
     }
     if(this._timer){
-      this._timer= undefined;
       clearInterval(this._timer)
+      this._timer= undefined;
       this._duration = level.duration;
       this.autoDrop()
     }

@@ -41,7 +41,6 @@ export class GamePageViewer implements GameViewer {
 
     // 注册键盘事件
     $(document).on('keydown', (e) => {
-      console.log(e.code);
       switch (e.code) {
         case 'Space':
           if (game.gameStatus === GameStatus.playing) {
